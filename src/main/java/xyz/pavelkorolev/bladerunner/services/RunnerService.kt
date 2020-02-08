@@ -1,11 +1,20 @@
 package xyz.pavelkorolev.bladerunner.services
 
 import java.io.File
-import java.io.PrintWriter
+
+interface RunnerListener {
+
+    fun onFileOk(file: File) = Unit
+
+    fun onFileClone(file: File) = Unit
+
+    fun onCompleted() = Unit
+
+}
 
 interface RunnerService {
 
-    fun printDuplicates(root: File, writer: PrintWriter)
+    fun processFiles(root: File, listener: RunnerListener)
 
 }
 
@@ -13,7 +22,7 @@ class RunnerServiceImpl(
     private val hashService: HashService
 ) : RunnerService {
 
-    override fun printDuplicates(root: File, writer: PrintWriter) {
+    override fun processFiles(root: File, listener: RunnerListener) {
         val map = mutableMapOf<String, File>()
 
         for (file in root.walkTopDown()) {
@@ -21,13 +30,14 @@ class RunnerServiceImpl(
 
             val hash = hashService.calculateHash(file)
             if (hash in map) {
-                writer.println(file)
+                listener.onFileClone(file)
                 continue
             }
-
+            listener.onFileOk(file)
             map[hash] = file
         }
-        writer.flush()
+
+        listener.onCompleted()
     }
 
 }

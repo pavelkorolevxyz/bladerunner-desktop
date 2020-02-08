@@ -2,16 +2,20 @@ package xyz.pavelkorolev.bladerunner.commands
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.option
+import xyz.pavelkorolev.bladerunner.services.RunnerListener
 import xyz.pavelkorolev.bladerunner.services.RunnerService
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.io.PrintWriter
 
-class RunCommand(
-    private val finder: RunnerService
+/**
+ * Command to find and print file clones
+ */
+class FindCommand(
+    private val runningService: RunnerService
 ) : CliktCommand(
-    name = "run"
+    name = "find"
 ) {
 
     private val directoryPath by option(
@@ -34,11 +38,29 @@ class RunCommand(
         if (!file.isDirectory) return
 
         val outputStream = createOutputStream()
-        PrintWriter(outputStream).use { writer ->
-            finder.printDuplicates(file, writer)
-        }
+        val writer = PrintWriter(outputStream)
+
+        runningService.processFiles(file, object : RunnerListener {
+
+            override fun onFileOk(file: File) {
+                writer.println("OK $file")
+            }
+
+            override fun onFileClone(file: File) {
+                writer.println("CLONE $file")
+            }
+
+            override fun onCompleted() {
+                writer.flush()
+                writer.close()
+            }
+
+        })
     }
 
+    /**
+     * Creates output stream based on out option
+     */
     private fun createOutputStream(): OutputStream {
         val out = out ?: return System.out
         return FileOutputStream(out)

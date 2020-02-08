@@ -12,9 +12,9 @@ interface PhotoService {
 
 }
 
-class PhotoServiceImpl {
+class PhotoServiceImpl : PhotoService {
 
-    fun getDate(file: File): Date? {
+    override fun getDate(file: File): Date? {
         try {
             val metadata = ImageMetadataReader.readMetadata(file)
             val dir = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
