@@ -8,7 +8,7 @@ Run `bladerunner` command with arguments
 ## Flatten
 Copies all unique files to output directory.
 ```shell script
-Usage: bladerunner flatten [OPTIONS]
+Usage: java -jar bladerunner flatten [OPTIONS]
 
 Options:
   -din, --directory-in PATH    Path to root directory of input
@@ -20,7 +20,7 @@ Options:
 ## Clean
 Deletes all non-unique files from given directory.
 ```shell script
-Usage: bladerunner clean [OPTIONS]
+Usage: java -jar bladerunner clean [OPTIONS]
 
 Options:
   -d, --directory TEXT  Path to root directory
@@ -31,7 +31,7 @@ Options:
 ## Find
 Prints information if it's clone or not about all files in given directory.
 ```shell script
-Usage: bladerunner find [OPTIONS]
+Usage: java -jar bladerunner find [OPTIONS]
 
 Options:
   -d, --directory TEXT  Path to root directory
