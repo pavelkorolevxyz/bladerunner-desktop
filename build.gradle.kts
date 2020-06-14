@@ -34,6 +34,7 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.withType<Jar> {
+    archiveFileName.set("bladerunner.jar")
     manifest {
         attributes(
             mapOf(
