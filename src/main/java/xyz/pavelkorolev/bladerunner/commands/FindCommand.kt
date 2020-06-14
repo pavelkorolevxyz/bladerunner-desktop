@@ -46,8 +46,8 @@ class FindCommand(
                 writer.println("OK $file")
             }
 
-            override fun onFileClone(file: File) {
-                writer.println("CLONE $file")
+            override fun onFileClone(file: File, original: File) {
+                writer.println("CLONE $file of $original")
             }
 
             override fun onCompleted() {
