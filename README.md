@@ -1,6 +1,6 @@
 # bladerunner-desktop
 
-Console utility to find and delete file clones.
+Console utility to find and delete file clones based on file hashes.
 
 # Usage
 Run `bladerunner` command with arguments
@@ -41,3 +41,8 @@ Options:
 
 # Naming
 Files named using it's date and UUID. Date is calculated differently for different file types. For photos it's EXIF original date. Last modified date used for all other types.
+
+# Roadmap
+- Add a possibility save original file names
+- Add a possibility to save original file structure
+- Add error messages for wrong parameters
