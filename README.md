@@ -11,10 +11,10 @@ Copies all unique files to output directory.
 Usage: java -jar bladerunner flatten [OPTIONS]
 
 Options:
-  -din, --directory-in PATH    Path to root directory of input
-  -dout, --directory-out PATH  Path to output directory
-  -s, --silent                 Do not log activity
-  -h, --help                   Show this message and exit
+  -din, --directory-in DIRECTORY  Path to root directory of input
+  -dout, --directory-out PATH     Path to output directory
+  -s, --silent                    Do not log activity
+  -h, --help                      Show this message and exit
 ```
 
 ## Clean
@@ -23,9 +23,9 @@ Deletes all non-unique files from given directory.
 Usage: java -jar bladerunner clean [OPTIONS]
 
 Options:
-  -d, --directory TEXT  Path to root directory
-  -s, --silent          Do not log activity
-  -h, --help            Show this message and exit
+  -din, --directory-in DIRECTORY  Path to root directory of input
+  -s, --silent                    Do not log activity
+  -h, --help                      Show this message and exit
 ```
 
 ## Find
@@ -34,9 +34,9 @@ Prints information if it's clone or not about all files in given directory.
 Usage: java -jar bladerunner find [OPTIONS]
 
 Options:
-  -d, --directory TEXT  Path to root directory
-  -o, --out TEXT        Path to output file
-  -h, --help            Show this message and exit
+  -din, --directory-in DIRECTORY  Path to root directory of input
+  -o, --out TEXT                  Path to output file
+  -h, --help                      Show this message and exit
 ```
 
 # Naming

@@ -2,6 +2,8 @@ package xyz.pavelkorolev.bladerunner.commands
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.options.required
+import com.github.ajalt.clikt.parameters.types.file
 import xyz.pavelkorolev.bladerunner.services.RunnerListener
 import xyz.pavelkorolev.bladerunner.services.RunnerService
 import java.io.File
@@ -18,11 +20,17 @@ class FindCommand(
     name = "find"
 ) {
 
-    private val directoryPath by option(
-        "-d",
-        "--directory",
-        help = "Path to root directory"
+    private val directoryIn by option(
+        "-din",
+        "--directory-in",
+        help = "Path to root directory of input"
     )
+        .file(
+            exists = true,
+            fileOkay = false,
+            folderOkay = true
+        )
+        .required()
 
     private val out by option(
         "-o",
@@ -31,16 +39,10 @@ class FindCommand(
     )
 
     override fun run() {
-        val directoryPath = directoryPath ?: return
-
-        val file = File(directoryPath)
-        if (!file.exists()) return
-        if (!file.isDirectory) return
-
         val outputStream = createOutputStream()
         val writer = PrintWriter(outputStream)
 
-        runningService.processFiles(file, object : RunnerListener {
+        runningService.processFiles(directoryIn, object : RunnerListener {
 
             override fun onFileOk(file: File) {
                 writer.println("OK $file")

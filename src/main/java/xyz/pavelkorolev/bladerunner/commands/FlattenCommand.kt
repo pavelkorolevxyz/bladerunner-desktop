@@ -26,7 +26,11 @@ class FlattenCommand(
         "--directory-in",
         help = "Path to root directory of input"
     )
-        .file()
+        .file(
+            exists = true,
+            fileOkay = false,
+            folderOkay = true
+        )
         .required()
 
     private val directoryOut by option(
@@ -42,10 +46,6 @@ class FlattenCommand(
     ).flag()
 
     override fun run() {
-        val directoryIn = directoryIn
-        if (!directoryIn.exists()) return
-        if (!directoryIn.isDirectory) return
-
         val total = runningService.getTotalFileCount(directoryIn)
         var copied = 0
         var ignored = 0
