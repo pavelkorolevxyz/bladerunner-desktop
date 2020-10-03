@@ -9,9 +9,9 @@ import com.github.ajalt.clikt.parameters.types.enum
 import com.github.ajalt.clikt.parameters.types.file
 import xyz.pavelkorolev.bladerunner.entities.NamingStrategy
 import xyz.pavelkorolev.bladerunner.services.NamingService
+import xyz.pavelkorolev.bladerunner.services.PrintWriterFactory
 import xyz.pavelkorolev.bladerunner.services.RunnerListener
 import xyz.pavelkorolev.bladerunner.services.RunnerService
-import xyz.pavelkorolev.bladerunner.utils.logIf
 import java.io.File
 
 /**
@@ -47,13 +47,6 @@ class FlattenCommand(
         )
         .required()
 
-    private val isSilent by option(
-        "-s",
-        "--silent",
-        help = "Do not log activity"
-    )
-        .flag()
-
     private val namingStrategy by option(
         "-ns",
         "--naming-strategy",
@@ -62,6 +55,23 @@ class FlattenCommand(
         .enum<NamingStrategy>()
         .default(NamingStrategy.MODIFIED_DATE)
 
+    private val out by option(
+        "-o",
+        "--out",
+        help = "Path to output file"
+    )
+        .file(
+            fileOkay = true,
+            folderOkay = false
+        )
+
+    private val isSilent by option(
+        "-s",
+        "--silent",
+        help = "Do not log activity"
+    )
+        .flag()
+
     override fun run() {
         val total = runningService.getTotalFileCount(directoryIn)
         var copied = 0
@@ -69,19 +79,28 @@ class FlattenCommand(
 
         fun countString(): String = "Copied: $copied/$total. Ignored: $ignored"
 
+        val writer = PrintWriterFactory.create(out)
+
         runningService.processFiles(directoryIn, object : RunnerListener {
 
             override fun onFileOk(file: File) {
                 val fileName = namingService.generateName(file, namingStrategy)
                 val outputFile = File(directoryOut, fileName)
                 file.copyTo(outputFile)
+                if (isSilent) return
                 copied++
-                logIf(!isSilent, "COPY $file as $fileName. ${countString()}")
+                writer.println("COPY $file as $fileName. ${countString()}")
             }
 
             override fun onFileClone(file: File, original: File) {
+                if (isSilent) return
                 ignored++
-                logIf(!isSilent, "IGNORED $file. ${countString()}")
+                writer.println("IGNORED $file. ${countString()}")
+            }
+
+            override fun onCompleted() {
+                writer.flush()
+                writer.close()
             }
 
         })

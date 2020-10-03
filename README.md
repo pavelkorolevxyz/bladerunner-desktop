@@ -12,9 +12,10 @@ Options:
   -din, --directory-in DIRECTORY   Path to root directory of input
   -dout, --directory-out DIRECTORY
                                    Path to output directory
-  -s, --silent                     Do not log activity
   -ns, --naming-strategy [MODIFIED_DATE|PHOTO_TAKEN]
                                    Naming strategy for created files
+  -o, --out FILE                   Path to output file
+  -s, --silent                     Do not log activity
   -h, --help                       Show this message and exit
 ```
 ### Naming strategy
@@ -30,6 +31,7 @@ Usage: java -jar bladerunner clean [OPTIONS]
 
 Options:
   -din, --directory-in DIRECTORY  Path to root directory of input
+  -o, --out FILE                  Path to output file
   -s, --silent                    Do not log activity
   -h, --help                      Show this message and exit
 ```
@@ -41,6 +43,6 @@ Usage: java -jar bladerunner find [OPTIONS]
 
 Options:
   -din, --directory-in DIRECTORY  Path to root directory of input
-  -o, --out TEXT                  Path to output file
+  -o, --out FILE                  Path to output file
   -h, --help                      Show this message and exit
 ```

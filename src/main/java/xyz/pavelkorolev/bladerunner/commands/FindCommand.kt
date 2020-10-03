@@ -4,12 +4,10 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.types.file
+import xyz.pavelkorolev.bladerunner.services.PrintWriterFactory
 import xyz.pavelkorolev.bladerunner.services.RunnerListener
 import xyz.pavelkorolev.bladerunner.services.RunnerService
 import java.io.File
-import java.io.FileOutputStream
-import java.io.OutputStream
-import java.io.PrintWriter
 
 /**
  * Command to find and print file clones
@@ -37,10 +35,13 @@ class FindCommand(
         "--out",
         help = "Path to output file"
     )
+        .file(
+            fileOkay = true,
+            folderOkay = false
+        )
 
     override fun run() {
-        val outputStream = createOutputStream()
-        val writer = PrintWriter(outputStream)
+        val writer = PrintWriterFactory.create(out)
 
         runningService.processFiles(directoryIn, object : RunnerListener {
 
@@ -60,12 +61,5 @@ class FindCommand(
         })
     }
 
-    /**
-     * Creates output stream based on out option
-     */
-    private fun createOutputStream(): OutputStream {
-        val out = out ?: return System.out
-        return FileOutputStream(out)
-    }
 
 }

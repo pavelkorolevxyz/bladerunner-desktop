@@ -5,9 +5,9 @@ import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.types.file
+import xyz.pavelkorolev.bladerunner.services.PrintWriterFactory
 import xyz.pavelkorolev.bladerunner.services.RunnerListener
 import xyz.pavelkorolev.bladerunner.services.RunnerService
-import xyz.pavelkorolev.bladerunner.utils.logIf
 import java.io.File
 
 /**
@@ -31,6 +31,16 @@ class CleanCommand(
         )
         .required()
 
+    private val out by option(
+        "-o",
+        "--out",
+        help = "Path to output file"
+    )
+        .file(
+            fileOkay = true,
+            folderOkay = false
+        )
+
     private val isSilent by option(
         "-s",
         "--silent",
@@ -38,12 +48,19 @@ class CleanCommand(
     ).flag()
 
     override fun run() {
+        val writer = PrintWriterFactory.create(out)
+
         runningService.processFiles(directoryIn, object : RunnerListener {
 
             override fun onFileClone(file: File, original: File) {
                 val isDeleted = file.delete()
-                val logCondition = isDeleted && !isSilent
-                logIf(logCondition, "DELETE $file")
+                if (isSilent || !isDeleted) return
+                writer.println("DELETE $file")
+            }
+
+            override fun onCompleted() {
+                writer.flush()
+                writer.close()
             }
 
         })
