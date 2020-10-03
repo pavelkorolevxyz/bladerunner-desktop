@@ -1,10 +1,13 @@
 package xyz.pavelkorolev.bladerunner.commands
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
+import com.github.ajalt.clikt.parameters.types.enum
 import com.github.ajalt.clikt.parameters.types.file
+import xyz.pavelkorolev.bladerunner.entities.NamingStrategy
 import xyz.pavelkorolev.bladerunner.services.NamingService
 import xyz.pavelkorolev.bladerunner.services.RunnerListener
 import xyz.pavelkorolev.bladerunner.services.RunnerService
@@ -37,13 +40,27 @@ class FlattenCommand(
         "-dout",
         "--directory-out",
         help = "Path to output directory"
-    ).file()
+    )
+        .file(
+            fileOkay = false,
+            folderOkay = true
+        )
+        .required()
 
     private val isSilent by option(
         "-s",
         "--silent",
         help = "Do not log activity"
-    ).flag()
+    )
+        .flag()
+
+    private val namingStrategy by option(
+        "-ns",
+        "--naming-strategy",
+        help = "Naming strategy for created files"
+    )
+        .enum<NamingStrategy>()
+        .default(NamingStrategy.MODIFIED_DATE)
 
     override fun run() {
         val total = runningService.getTotalFileCount(directoryIn)
@@ -55,7 +72,7 @@ class FlattenCommand(
         runningService.processFiles(directoryIn, object : RunnerListener {
 
             override fun onFileOk(file: File) {
-                val fileName = namingService.generateName(file)
+                val fileName = namingService.generateName(file, namingStrategy)
                 val outputFile = File(directoryOut, fileName)
                 file.copyTo(outputFile)
                 copied++

@@ -8,14 +8,20 @@ Run `bladerunner` command with arguments
 ## Flatten
 Copies all unique files to output directory.
 ```shell script
-Usage: java -jar bladerunner flatten [OPTIONS]
-
 Options:
-  -din, --directory-in DIRECTORY  Path to root directory of input
-  -dout, --directory-out PATH     Path to output directory
-  -s, --silent                    Do not log activity
-  -h, --help                      Show this message and exit
+  -din, --directory-in DIRECTORY   Path to root directory of input
+  -dout, --directory-out DIRECTORY
+                                   Path to output directory
+  -s, --silent                     Do not log activity
+  -ns, --naming-strategy [MODIFIED_DATE|PHOTO_TAKEN]
+                                   Naming strategy for created files
+  -h, --help                       Show this message and exit
 ```
+### Naming strategy
+Files named using its date and UUID.
+Date is calculated differently for different naming strategies provided. 
+- `MODIFIED_DATE` obtains file last modified date. `MODIFIED_DATE` is default fallback behaviour.
+- `PHOTO_TAKEN` obtains photo taken date from file EXIF if possible, uses fallback otherwise.
 
 ## Clean
 Deletes all non-unique files from given directory.
@@ -38,7 +44,3 @@ Options:
   -o, --out TEXT                  Path to output file
   -h, --help                      Show this message and exit
 ```
-
-# Naming
-Files named using it's date and UUID. Date is calculated differently for different file types. For photos it's EXIF original date. Last modified date used for all other types.
-
