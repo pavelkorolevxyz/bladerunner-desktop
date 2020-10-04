@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "xyz.pavelkorolev.bladerunner"
-version = "0.1.0"
+version = "0.2.0"
 
 application {
     mainClassName = "$group.MainKt"

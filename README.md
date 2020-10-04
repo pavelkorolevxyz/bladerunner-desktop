@@ -3,7 +3,11 @@
 Console utility to find and delete file clones based on file hashes.
 
 # Usage
-Run `bladerunner` command with arguments
+Run `bladerunner` using Java.
+
+```shell script
+java -jar bladerunner.jar [COMMAND] [OPTIONS]
+```
 
 ## Run
 Copies all unique files to output directory.
@@ -38,14 +42,10 @@ Deletes all non-unique files from given directory.
 Usage: bladerunner clean [OPTIONS]
 
 Options:
-  -din, --directory-in DIRECTORY   Path to root directory of input
-  -dout, --directory-out DIRECTORY
-                                   Path to output directory
-  -ns, --naming-strategy [DEFAULT|DATE_MODIFIED|PHOTO_TAKEN]
-                                   Naming strategy for created files
-  -o, --out FILE                   Path to output file
-  -s, --silent                     Do not log activity
-  -h, --help                       Show this message and exit
+  -din, --directory-in DIRECTORY  Path to root directory of input
+  -o, --out FILE                  Path to output file
+  -s, --silent                    Do not log activity
+  -h, --help                      Show this message and exit
 ```
 
 ## Find
