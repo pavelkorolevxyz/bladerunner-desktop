@@ -1,3 +1,5 @@
+![Java CI](https://github.com/pavelkorolevxyz/bladerunner-desktop/workflows/Java%20CI/badge.svg?branch=development)
+
 # bladerunner-desktop
 
 Console utility to find and delete file clones based on file hashes.
