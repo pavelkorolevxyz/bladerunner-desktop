@@ -5,19 +5,24 @@ Console utility to find and delete file clones based on file hashes.
 # Usage
 Run `bladerunner` command with arguments
 
-## Flatten
+## Run
 Copies all unique files to output directory.
 ```shell script
+Usage: bladerunner run [OPTIONS]
+
 Options:
   -din, --directory-in DIRECTORY   Path to root directory of input
   -dout, --directory-out DIRECTORY
                                    Path to output directory
-  -ns, --naming-strategy [MODIFIED_DATE|PHOTO_TAKEN]
+  -ns, --naming-strategy [DEFAULT|DATE_MODIFIED|PHOTO_TAKEN]
                                    Naming strategy for created files
   -o, --out FILE                   Path to output file
   -s, --silent                     Do not log activity
+  -f, --flatten                    Copy all files into out directory without
+                                   saving directory tree
   -h, --help                       Show this message and exit
 ```
+
 ### Naming strategy
 Files named using its date and UUID.
 Date is calculated differently for different naming strategies provided. 
@@ -30,6 +35,8 @@ Random UUID string is added as file name suffix if there's file with same file n
 ## Clean
 Deletes all non-unique files from given directory.
 ```shell script
+Usage: bladerunner clean [OPTIONS]
+
 Options:
   -din, --directory-in DIRECTORY   Path to root directory of input
   -dout, --directory-out DIRECTORY
@@ -44,7 +51,7 @@ Options:
 ## Find
 Prints information if it's clone or not about all files in given directory.
 ```shell script
-Usage: java -jar bladerunner find [OPTIONS]
+Usage: bladerunner find [OPTIONS]
 
 Options:
   -din, --directory-in DIRECTORY  Path to root directory of input

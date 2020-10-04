@@ -3,7 +3,7 @@ package xyz.pavelkorolev.bladerunner
 import com.github.ajalt.clikt.core.subcommands
 import xyz.pavelkorolev.bladerunner.commands.CleanCommand
 import xyz.pavelkorolev.bladerunner.commands.FindCommand
-import xyz.pavelkorolev.bladerunner.commands.FlattenCommand
+import xyz.pavelkorolev.bladerunner.commands.RunCommand
 import xyz.pavelkorolev.bladerunner.commands.MainCommand
 import xyz.pavelkorolev.bladerunner.services.*
 
@@ -19,14 +19,14 @@ private val namingService: NamingService = NamingServiceImpl(photoService, fileS
 
 fun main(args: Array<String>) {
     val findCommand = FindCommand(runnerService)
-    val killCommand = CleanCommand(runnerService)
-    val flattenCommand = FlattenCommand(runnerService, namingService)
+    val cleanCommand = CleanCommand(runnerService)
+    val runCommand = RunCommand(runnerService, namingService)
 
     MainCommand()
         .subcommands(
             findCommand,
-            killCommand,
-            flattenCommand
+            cleanCommand,
+            runCommand
         )
         .main(args)
 }

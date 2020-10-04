@@ -15,13 +15,13 @@ import xyz.pavelkorolev.bladerunner.services.RunnerService
 import java.io.File
 
 /**
- * Flattens all unique files into one directory
+ * Copy all unique files from given input directory to output directory
  */
-class FlattenCommand(
+class RunCommand(
     private val runningService: RunnerService,
     private val namingService: NamingService
 ) : CliktCommand(
-    name = "flatten"
+    name = "run"
 ) {
 
     private val directoryIn by option(
@@ -72,6 +72,13 @@ class FlattenCommand(
     )
         .flag()
 
+    private val isFlatten by option(
+        "-f",
+        "--flatten",
+        help = "Copy all files into out directory without saving directory tree"
+    )
+        .flag()
+
     override fun run() {
         val total = runningService.getTotalFileCount(directoryIn)
         var copied = 0
@@ -84,7 +91,14 @@ class FlattenCommand(
         runningService.processFiles(directoryIn, object : RunnerListener {
 
             override fun onFileOk(file: File) {
-                val outputFile = getUniqueOutputFile(file)
+                val directoryOut = when (isFlatten) {
+                    true -> directoryOut
+                    false -> {
+                        val directoryRelative = file.relativeTo(directoryIn).parent
+                        File(directoryOut, directoryRelative)
+                    }
+                }
+                val outputFile = getUniqueOutputFile(file, directoryOut)
                 file.copyTo(outputFile)
                 if (isSilent) return
                 copied++
@@ -109,7 +123,7 @@ class FlattenCommand(
      * Returns file named without UUID if it doesn't exist.
      * Otherwise UUID used in file name.
      */
-    private fun getUniqueOutputFile(file: File): File {
+    private fun getUniqueOutputFile(file: File, directoryOut: File): File {
         val fileName = namingService.generateName(file, namingStrategy)
         val outputFile = File(directoryOut, fileName)
         if (!outputFile.exists()) return outputFile
