@@ -10,6 +10,11 @@ import java.util.*
 interface FileService {
 
     /**
+     * Returns file name without extension
+     */
+    fun getName(file: File): String
+
+    /**
      * Returns file content type if possible
      */
     fun getContentType(file: File): String?
@@ -22,6 +27,10 @@ interface FileService {
 }
 
 class FileServiceImpl : FileService {
+
+    override fun getName(file: File): String {
+        return file.nameWithoutExtension
+    }
 
     override fun getContentType(file: File): String? {
         return Files.probeContentType(file.toPath())

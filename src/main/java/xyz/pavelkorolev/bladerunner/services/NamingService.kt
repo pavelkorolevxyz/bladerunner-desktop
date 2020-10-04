@@ -11,11 +11,13 @@ import java.util.*
 interface NamingService {
 
     /**
-     * Generates new name for given [file]
+     * Generates output name for given [file] using [strategy].
+     * [addUuid] parameter can be used to add unique suffix.
      */
     fun generateName(
         file: File,
-        strategy: NamingStrategy
+        strategy: NamingStrategy,
+        addUuid: Boolean = false
     ): String
 
 }
@@ -25,22 +27,50 @@ class NamingServiceImpl(
     private val fileService: FileService
 ) : NamingService {
 
+    companion object {
+        private val dateFormatter = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
+    }
+
     override fun generateName(
         file: File,
-        strategy: NamingStrategy
+        strategy: NamingStrategy,
+        addUuid: Boolean
     ): String {
-        val date = when (strategy) {
-            NamingStrategy.MODIFIED_DATE -> null // Will be used by default anyway
-            NamingStrategy.PHOTO_TAKEN -> photoService.getDate(file)
-        } ?: fileService.getModifyDate(file)
+        val name = when (strategy) {
+            NamingStrategy.DEFAULT -> null // Will be used by default anyway
+            NamingStrategy.DATE_MODIFIED -> {
+                val modifiedDate = fileService.getModifyDate(file)
+                modifiedDate.formatted()
+            }
+            NamingStrategy.PHOTO_TAKEN -> {
+                val photoTakenDate = photoService.getDate(file)
+                photoTakenDate?.formatted()
+            }
+        } ?: fileService.getName(file)
 
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
-        val dateString = dateFormat.format(date)
+        val builder = StringBuilder()
+            .append(name)
 
-        val uuid = UUID.randomUUID().toString()
+        if (addUuid) {
+            val uuid = UUID.randomUUID().toString()
+            builder
+                .append("_")
+                .append(uuid)
+        }
 
         val extension = file.extension
-        return "${dateString}_${uuid}.$extension".toLowerCase()
+        if (extension.isNotEmpty()) {
+            builder
+                .append(".")
+                .append(extension.toLowerCase())
+        }
+
+        return builder.toString()
     }
+
+    /**
+     * Formats date with local formatter
+     */
+    private fun Date.formatted() = dateFormatter.format(this)
 
 }

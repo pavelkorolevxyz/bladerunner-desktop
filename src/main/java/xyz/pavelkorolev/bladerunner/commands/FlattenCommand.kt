@@ -53,7 +53,7 @@ class FlattenCommand(
         help = "Naming strategy for created files"
     )
         .enum<NamingStrategy>()
-        .default(NamingStrategy.MODIFIED_DATE)
+        .default(NamingStrategy.DEFAULT)
 
     private val out by option(
         "-o",
@@ -84,12 +84,11 @@ class FlattenCommand(
         runningService.processFiles(directoryIn, object : RunnerListener {
 
             override fun onFileOk(file: File) {
-                val fileName = namingService.generateName(file, namingStrategy)
-                val outputFile = File(directoryOut, fileName)
+                val outputFile = getUniqueOutputFile(file)
                 file.copyTo(outputFile)
                 if (isSilent) return
                 copied++
-                writer.println("COPY $file as $fileName. ${countString()}")
+                writer.println("COPY $file as ${outputFile.name}. ${countString()}")
             }
 
             override fun onFileClone(file: File, original: File) {
@@ -104,6 +103,19 @@ class FlattenCommand(
             }
 
         })
+    }
+
+    /**
+     * Returns file named without UUID if it doesn't exist.
+     * Otherwise UUID used in file name.
+     */
+    private fun getUniqueOutputFile(file: File): File {
+        val fileName = namingService.generateName(file, namingStrategy)
+        val outputFile = File(directoryOut, fileName)
+        if (!outputFile.exists()) return outputFile
+
+        val anotherFileName = namingService.generateName(file, namingStrategy, addUuid = true)
+        return File(directoryOut, anotherFileName)
     }
 
 }

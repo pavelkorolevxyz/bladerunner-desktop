@@ -21,19 +21,24 @@ Options:
 ### Naming strategy
 Files named using its date and UUID.
 Date is calculated differently for different naming strategies provided. 
-- `MODIFIED_DATE` obtains file last modified date. `MODIFIED_DATE` is default fallback behaviour.
+- `DEFAULT` obtains original file name. `DEFAULT` is default fallback behaviour.
+- `DATE_MODIFIED` obtains file last modified date. 
 - `PHOTO_TAKEN` obtains photo taken date from file EXIF if possible, uses fallback otherwise.
+
+Random UUID string is added as file name suffix if there's file with same file name in output directory. 
 
 ## Clean
 Deletes all non-unique files from given directory.
 ```shell script
-Usage: java -jar bladerunner clean [OPTIONS]
-
 Options:
-  -din, --directory-in DIRECTORY  Path to root directory of input
-  -o, --out FILE                  Path to output file
-  -s, --silent                    Do not log activity
-  -h, --help                      Show this message and exit
+  -din, --directory-in DIRECTORY   Path to root directory of input
+  -dout, --directory-out DIRECTORY
+                                   Path to output directory
+  -ns, --naming-strategy [DEFAULT|DATE_MODIFIED|PHOTO_TAKEN]
+                                   Naming strategy for created files
+  -o, --out FILE                   Path to output file
+  -s, --silent                     Do not log activity
+  -h, --help                       Show this message and exit
 ```
 
 ## Find

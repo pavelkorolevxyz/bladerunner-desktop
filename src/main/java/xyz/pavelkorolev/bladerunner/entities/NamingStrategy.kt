@@ -6,9 +6,14 @@ package xyz.pavelkorolev.bladerunner.entities
 enum class NamingStrategy {
 
     /**
-     * Use last modified date as file name. Default.
+     * Use same file name
      */
-    MODIFIED_DATE,
+    DEFAULT,
+
+    /**
+     * Use last modified date as file name. Default otherwise
+     */
+    DATE_MODIFIED,
 
     /**
      * Use photo taken date from EXIF. Default otherwise.
