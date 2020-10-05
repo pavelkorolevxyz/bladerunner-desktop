@@ -1,9 +1,10 @@
 package xyz.pavelkorolev.bladerunner.services
 
 import com.drew.imaging.ImageMetadataReader
+import com.drew.imaging.ImageProcessingException
 import com.drew.metadata.exif.ExifSubIFDDirectory
-import com.drew.metadata.file.FileSystemDirectory
 import java.io.File
+import java.io.IOException
 import java.util.*
 
 /**
@@ -21,25 +22,14 @@ interface PhotoService {
 
 class PhotoServiceImpl : PhotoService {
 
-    override fun getDate(file: File): Date? {
-        try {
-            val metadata = ImageMetadataReader.readMetadata(file)
-            val dir = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
-            val dateOriginal = dir?.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL)
-
-            val dirFile = metadata.getFirstDirectoryOfType(FileSystemDirectory::class.java)
-            val dateFile = dirFile?.getDate(FileSystemDirectory.TAG_FILE_MODIFIED_DATE)
-            if (dateOriginal != null) {
-                return dateOriginal
-            }
-            if (dateFile != null) {
-                return dateFile
-            }
-        } catch (e: Exception) {
-            val millis = file.lastModified()
-            return Date(millis)
-        }
-        return null
+    override fun getDate(file: File): Date? = try {
+        val metadata = ImageMetadataReader.readMetadata(file)
+        val dir = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
+        dir?.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL)
+    } catch (e: ImageProcessingException) {
+        null
+    } catch (e: IOException) {
+        null
     }
 
 }

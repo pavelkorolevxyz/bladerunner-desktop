@@ -1,6 +1,6 @@
 name: Java CI
 
-on: [push]
+on: [ push ]
 
 jobs:
   build:
@@ -15,8 +15,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Gradle Build
-        run: ./gradlew build
+      - name: Test
+        run: ./gradlew check
 
       - name: Create Artifact
         run: ./gradlew shadowJar

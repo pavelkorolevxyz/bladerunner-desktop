@@ -8,14 +8,17 @@ import xyz.pavelkorolev.bladerunner.commands.MainCommand
 import xyz.pavelkorolev.bladerunner.services.*
 
 private val hashService: HashService = HashServiceImpl()
-
 private val runnerService: RunnerService = RunnerServiceImpl(hashService)
-
 private val photoService: PhotoService = PhotoServiceImpl()
-
 private val fileService: FileService = FileServiceImpl()
-
-private val namingService: NamingService = NamingServiceImpl(photoService, fileService)
+private val randomService: RandomService = RandomServiceImpl()
+private val dateFormatter: DateFormatter = DateFormatterImpl()
+private val namingService: NamingService = NamingServiceImpl(
+    photoService,
+    fileService,
+    randomService,
+    dateFormatter
+)
 
 fun main(args: Array<String>) {
     val findCommand = FindCommand(runnerService)

@@ -18,7 +18,7 @@ import java.io.File
  * Copy all unique files from given input directory to output directory
  */
 class RunCommand(
-    private val runningService: RunnerService,
+    private val runnerService: RunnerService,
     private val namingService: NamingService
 ) : CliktCommand(
     name = "run"
@@ -80,7 +80,7 @@ class RunCommand(
         .flag()
 
     override fun run() {
-        val total = runningService.getTotalFileCount(directoryIn)
+        val total = runnerService.getTotalFileCount(directoryIn)
         var copied = 0
         var ignored = 0
 
@@ -88,7 +88,7 @@ class RunCommand(
 
         val writer = PrintWriterFactory.create(out)
 
-        runningService.processFiles(directoryIn, object : RunnerListener {
+        runnerService.processFiles(directoryIn, object : RunnerListener {
 
             override fun onFileOk(file: File) {
                 val directoryOut = when (isFlatten) {

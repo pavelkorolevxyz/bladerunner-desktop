@@ -23,6 +23,24 @@ dependencies {
 
     implementation("com.github.ajalt:clikt:2.4.0")
     implementation("com.drewnoakes:metadata-extractor:2.13.0")
+
+    testImplementation("org.assertj:assertj-core:3.12.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.2")
+}
+
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+
+        setExceptionFormat("full")
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+
+        showStandardStreams = false
+    }
 }
 
 configure<JavaPluginConvention> {

@@ -13,7 +13,7 @@ import java.io.File
  * Command to find and print file clones
  */
 class FindCommand(
-    private val runningService: RunnerService
+    private val runnerService: RunnerService
 ) : CliktCommand(
     name = "find"
 ) {
@@ -43,7 +43,7 @@ class FindCommand(
     override fun run() {
         val writer = PrintWriterFactory.create(out)
 
-        runningService.processFiles(directoryIn, object : RunnerListener {
+        runnerService.processFiles(directoryIn, object : RunnerListener {
 
             override fun onFileOk(file: File) {
                 writer.println("OK $file")

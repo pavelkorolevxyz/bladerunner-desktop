@@ -24,12 +24,10 @@ interface NamingService {
 
 class NamingServiceImpl(
     private val photoService: PhotoService,
-    private val fileService: FileService
+    private val fileService: FileService,
+    private val randomService: RandomService,
+    private val dateFormatter: DateFormatter
 ) : NamingService {
-
-    companion object {
-        private val dateFormatter = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss")
-    }
 
     override fun generateName(
         file: File,
@@ -40,11 +38,11 @@ class NamingServiceImpl(
             NamingStrategy.DEFAULT -> null // Will be used by default anyway
             NamingStrategy.DATE_MODIFIED -> {
                 val modifiedDate = fileService.getModifyDate(file)
-                modifiedDate.formatted()
+                dateFormatter.formatDate(modifiedDate)
             }
             NamingStrategy.PHOTO_TAKEN -> {
                 val photoTakenDate = photoService.getDate(file)
-                photoTakenDate?.formatted()
+                photoTakenDate?.let { dateFormatter.formatDate(it) }
             }
         } ?: fileService.getName(file)
 
@@ -52,7 +50,7 @@ class NamingServiceImpl(
             .append(name)
 
         if (addUuid) {
-            val uuid = UUID.randomUUID().toString()
+            val uuid = randomService.generateUuidString()
             builder
                 .append("_")
                 .append(uuid)
@@ -67,10 +65,5 @@ class NamingServiceImpl(
 
         return builder.toString()
     }
-
-    /**
-     * Formats date with local formatter
-     */
-    private fun Date.formatted() = dateFormatter.format(this)
 
 }

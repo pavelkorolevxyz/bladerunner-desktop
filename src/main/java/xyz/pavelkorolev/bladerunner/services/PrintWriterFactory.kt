@@ -20,6 +20,10 @@ object PrintWriterFactory {
      */
     private fun createOutputStream(outFile: File?): OutputStream {
         val out = outFile ?: return System.out
+
+        // Create all directories to parent
+        out.parentFile?.mkdirs()
+
         return FileOutputStream(out)
     }
 

@@ -14,7 +14,7 @@ import java.io.File
  * Deletes all clone files
  */
 class CleanCommand(
-    private val runningService: RunnerService
+    private val runnerService: RunnerService
 ) : CliktCommand(
     name = "clean"
 ) {
@@ -45,12 +45,13 @@ class CleanCommand(
         "-s",
         "--silent",
         help = "Do not log activity"
-    ).flag()
+    )
+        .flag()
 
     override fun run() {
         val writer = PrintWriterFactory.create(out)
 
-        runningService.processFiles(directoryIn, object : RunnerListener {
+        runnerService.processFiles(directoryIn, object : RunnerListener {
 
             override fun onFileClone(file: File, original: File) {
                 val isDeleted = file.delete()
