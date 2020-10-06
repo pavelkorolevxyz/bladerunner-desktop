@@ -25,4 +25,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: bladerunner
-          path: build/libs/bladerunner.jar
+          path: build/libs/bladerunner-*.jar

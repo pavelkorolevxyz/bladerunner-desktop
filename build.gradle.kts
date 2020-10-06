@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "xyz.pavelkorolev.bladerunner"
-version = "0.2.0"
+version = "1.0.0"
 
 application {
     mainClassName = "$group.MainKt"
@@ -52,7 +52,7 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.withType<Jar> {
-    archiveFileName.set("bladerunner.jar")
+    archiveFileName.set("bladerunner-${archiveVersion.get()}.jar")
     manifest {
         attributes(
             mapOf(
